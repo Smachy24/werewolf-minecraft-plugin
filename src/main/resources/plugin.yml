@@ -2,3 +2,10 @@ name: werewolf-plugin-minecraft
 version: '${project.version}'
 main: werewolf.plugin.minecraft.Main
 api-version: '1.20'
+commands:
+  start:
+    description: Start the game
+    usage: /start
+    aliases: s
+    permission: admin.werewolf
+    permission-message: You do not have permission.
