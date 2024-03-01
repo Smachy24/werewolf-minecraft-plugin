@@ -1,4 +1,4 @@
 name: werewolf-plugin-minecraft
 version: '${project.version}'
-main: werewolfpluginminecraft.werewolfpluginminecraft.Werewolf_plugin_minecraft
+main: werewolf.plugin.minecraft.Main
 api-version: '1.20'
