@@ -7,6 +7,10 @@ import werewolf.plugin.minecraft.roles.Werewolf;
 import java.util.ArrayList;
 
 public class GameConfiguration {
+
+    public GameConfiguration(){
+        createDefaultConfig();
+    }
     private ArrayList<Role> gameRoles = new ArrayList<>();
 
     public ArrayList<Role> getGameRoles() {
@@ -22,7 +26,6 @@ public class GameConfiguration {
         Villager villager = new Villager("Villager", "Villagers", "Simple villageois", "Description d'un simple villageois");
         this.gameRoles.add(werewolf);
         this.gameRoles.add(werewolf);
-        this.gameRoles.add(villager);
         this.gameRoles.add(villager);
         this.gameRoles.add(villager);
     }
