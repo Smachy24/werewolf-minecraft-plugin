@@ -1,0 +1,16 @@
+{
+  "roles-list" : [
+    {
+      "name": "Werewolf",
+      "team": "Werewolves",
+      "french_name": "Loup-garou",
+      "description": "Votre rôle est loup-garou"
+    },
+    {
+      "name": "Villager",
+      "team": "Villagers",
+      "french_name": "Simple villageois",
+      "description": "Votre rôle est simple villageois"
+    }
+  ]
+}
