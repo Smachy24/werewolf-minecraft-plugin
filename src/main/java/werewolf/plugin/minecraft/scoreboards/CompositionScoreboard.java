@@ -38,12 +38,9 @@ public class CompositionScoreboard {
     }
 
     private static void orderRoles() {
-        // Créer un comparateur personnalisé
         Comparator<Role> roleComparator = Comparator
-                .comparing(Role::getTeam)  // Trier par camp
-                .thenComparing(Role::getFrenchName);  // En cas d'égalité, trier par ordre alphabétique du nom
-
-        // Utiliser Collections.sort avec le comparateur
+                .comparing(Role::getTeam)
+                .thenComparing(Role::getFrenchName);
         Collections.sort(gameConfigRoles, roleComparator);
     }
 
@@ -72,7 +69,6 @@ public class CompositionScoreboard {
     }
 
     public static void updateScoreBoard(Player player) {
-
         if (gameConfigRoles.isEmpty()) {
             return;
         }
@@ -85,48 +81,12 @@ public class CompositionScoreboard {
         ChatColor roleColor = (roleCount > 0) ? getRoleColor(firstRole) : ChatColor.GRAY;
         ChatColor suffixColor = (roleCount > 0) ? ChatColor.BLUE : ChatColor.GRAY;
 
-
         Team composition = obj.getScoreboard().getTeam(roleName);
         if (composition == null) {
             composition = obj.getScoreboard().registerNewTeam(roleName);
         }
-
         composition.setColor(roleColor);
         composition.setSuffix(suffixColor + " - " + roleCount);
         player.setScoreboard(board);
     }
-
-
-
-//    public static void updateScoreBoard(Player player) {
-//        if (gameConfigRoles.isEmpty()) {
-//            return;
-//        }
-//
-//        Role removedRole = gameConfigRoles.remove(0); // Remove the first role
-//
-//        String roleName = removedRole.getFrenchName();
-//        int roleCount = Collections.frequency(gameConfigRoles, removedRole);
-//        boolean roleExists = gameConfigRoles.contains(removedRole);
-//
-//        Team composition = obj.getScoreboard().getTeam(roleName);
-//        if (composition == null) {
-//            composition = obj.getScoreboard().registerNewTeam(roleName);
-//        }
-//
-////        for (String entry : composition.getEntries()) {
-////            obj.getScoreboard().resetScores(entry);
-////        }
-//
-//        if (!roleExists) {
-//            composition.addEntry(ChatColor.GRAY + roleName);
-////            obj.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(ChatColor.GRAY + roleName).setScore(roleCount);
-//            Bukkit.getServer().broadcastMessage("ROLE INEXISTANT");
-//        } else {
-//            composition.addEntry(roleName);
-////            obj.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(roleName).setScore(roleCount);
-//        }
-//        player.setScoreboard(board);
-//    }
-
 }
