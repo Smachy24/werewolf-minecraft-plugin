@@ -9,3 +9,10 @@ commands:
     aliases: s
     permission: admin.werewolf
     permission-message: You do not have permission.
+
+  test-remove-role:
+    description: Test removing one role of scoreboard
+    usage: /test-remove-role
+    aliases: s
+    permission: admin.werewolf
+    permission-message: You do not have permission.
