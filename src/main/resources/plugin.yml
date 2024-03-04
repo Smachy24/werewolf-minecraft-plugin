@@ -16,3 +16,10 @@ commands:
     aliases: s
     permission: admin.werewolf
     permission-message: You do not have permission.
+
+  config:
+    description: Config the game
+    usage: /config
+    aliases: s
+    permission: admin.werewolf
+    permission-message: You do not have permission.
