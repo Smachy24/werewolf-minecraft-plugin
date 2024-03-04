@@ -1,0 +1,14 @@
+- name: Werewolf
+  team: Werewolves
+  frenchName: Loup-garou
+  description: Votre rôle est loup-garou
+
+- name: Villager
+  team: Villagers
+  frenchName: Simple villageois
+  description: Votre rôle est simple villageois
+
+- name: Seer
+  team: Villagers
+  frenchName: Voyante
+  description: Votre rôle est voyante
