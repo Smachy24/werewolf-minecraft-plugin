@@ -2,6 +2,13 @@ package werewolf.plugin.minecraft.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import werewolf.plugin.minecraft.Main;
 import werewolf.plugin.minecraft.roles.Role;
 
@@ -10,9 +17,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RolesConfiguration {
+public class RolesConfiguration implements Listener {
     private static final String ROLES_FILE = "/roles-list.yml";
     private List<Role> configRoles = new ArrayList<>();
+
+    private String configItemName = ChatColor.YELLOW + "Config";
+    private Material configItem = Material.COMPASS;
 
     public List<Role> getConfigRoles() {
         return configRoles;
@@ -21,7 +31,6 @@ public class RolesConfiguration {
     public void setConfigRoles(List<Role> configRoles) {
         this.configRoles = configRoles;
     }
-
 
     public RolesConfiguration() {
         getFileRoles();
@@ -50,5 +59,11 @@ public class RolesConfiguration {
         }
     }
 
-
+    public void getItemConfig(Player player){
+        ItemStack item = new ItemStack(configItem);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(configItemName);
+        item.setItemMeta(itemMeta);
+        player.getInventory().setItem(4, item);
+    }
 }

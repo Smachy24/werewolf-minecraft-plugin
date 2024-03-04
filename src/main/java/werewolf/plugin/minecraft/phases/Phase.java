@@ -1,4 +1,4 @@
-package werewolf.plugin.minecraft.events;
+package werewolf.plugin.minecraft.phases;
 
 import java.io.IOException;
 import java.io.InputStream;
