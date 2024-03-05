@@ -3,6 +3,7 @@ package werewolf.plugin.minecraft.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,47 +20,51 @@ import java.util.List;
 
 public class RolesConfiguration implements Listener {
     private static final String ROLES_FILE = "/roles-list.yml";
-    private List<Role> configRoles = new ArrayList<>();
+    private static List<Role> configRoles = new ArrayList<>(); // Declare the list as static
 
-    private String configItemName = ChatColor.YELLOW + "Config";
-    private Material configItem = Material.COMPASS;
+    private static String configItemName = ChatColor.YELLOW + "Config";
+    private static Material configItem = Material.COMPASS;
 
-    public List<Role> getConfigRoles() {
+    public static List<Role> getConfigRoles() {
         return configRoles;
     }
 
-    public void setConfigRoles(List<Role> configRoles) {
-        this.configRoles = configRoles;
+    public static void setConfigRoles(List<Role> configRoles) {
+        RolesConfiguration.configRoles = configRoles;
     }
 
-    public RolesConfiguration() {
+    static {
         getFileRoles();
     }
 
-    private void getFileRoles() {
-            try (InputStream inputStream = Main.class.getResourceAsStream(ROLES_FILE)) {
-                ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-                List<Role> roles = mapper.readValue(inputStream, mapper.getTypeFactory().constructCollectionType(List.class, Role.class));
-                for (Role role : roles) {
-                    createEachRole(role);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Erreur lors de la lecture du fichier de rôles", e);
+    private static void getFileRoles() {
+        try (InputStream inputStream = Main.class.getResourceAsStream(ROLES_FILE)) {
+            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+            List<Role> roles = mapper.readValue(inputStream, mapper.getTypeFactory().constructCollectionType(List.class, Role.class));
+            for (Role role : roles) {
+                createEachRole(role);
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors de la lecture du fichier de rôles", e);
         }
+    }
 
-    private void createEachRole(Role role) {
+    private static void createEachRole(Role role) {
         try {
             String className = "werewolf.plugin.minecraft.roles." + role.getName();
             Class<?> roleClass = Class.forName(className);
-            Role instantiatedRole = (Role) roleClass.getDeclaredConstructor().newInstance();
+            Role instantiatedRole = (Role) roleClass.getDeclaredConstructor(String.class, String.class, String.class, String.class, ConfigItem.class)
+                    .newInstance(role.getName(), role.getTeam(), role.getFrenchName(), role.getDescription(), role.getConfigItem());
+
+            Bukkit.broadcastMessage(instantiatedRole.getFrenchName());
+            Bukkit.broadcastMessage(instantiatedRole.getConfigItem().name());
             configRoles.add(instantiatedRole);
         } catch (Exception e) {
             throw new RuntimeException("Error creating role: " + role.getName(), e);
         }
     }
 
-    public void getItemConfig(Player player){
+    public static void getItemConfig(Player player) {
         ItemStack item = new ItemStack(configItem);
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(configItemName);

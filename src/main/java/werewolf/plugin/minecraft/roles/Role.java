@@ -1,20 +1,26 @@
 package werewolf.plugin.minecraft.roles;
 
+import org.bukkit.Material;
+import werewolf.plugin.minecraft.events.ConfigGui;
+import werewolf.plugin.minecraft.utils.ConfigItem;
+
 public class Role {
     private String name;
     private String team;
     private String frenchName;
 
     private String description;
+    private ConfigItem configItem;
 
     public Role() {
     }
 
-    public Role(String name, String team, String frenchName, String description) {
+    public Role(String name, String team, String frenchName, String description, ConfigItem configItem) {
         this.name = name;
         this.team = team;
         this.frenchName = frenchName;
         this.description = description;
+        this.configItem = configItem;
     }
 
     public String getName() {
@@ -40,4 +46,13 @@ public class Role {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public ConfigItem getConfigItem() {
+        return configItem;
+    }
+
+    public void setConfigItem(ConfigItem configItem) {
+        this.configItem = configItem;
+    }
+
 }

@@ -1,6 +1,5 @@
 package werewolf.plugin.minecraft.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,7 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
+import werewolf.plugin.minecraft.utils.Gui;
 
 public class ConfigGui implements Listener {
 
@@ -25,20 +24,7 @@ public class ConfigGui implements Listener {
         if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
             if(itemStack.getType() == configItem) {
                 if(itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(configItemName)) {
-
-                    Inventory inventory = Bukkit.createInventory(null, 54, configItemName);
-
-                    for(Player players: Bukkit.getOnlinePlayers()) {
-
-                        ItemStack tete = new ItemStack(Material.PLAYER_HEAD);
-                        SkullMeta meta = (SkullMeta) tete.getItemMeta();
-                        meta.setOwner(players.getName());
-                        meta.setDisplayName(ChatColor.RED + players.getName());
-                        tete.setItemMeta(meta);
-
-                        inventory.addItem(tete);
-                    }
-
+                    Inventory inventory = Gui.createInventoryConfigRoles(54, configItemName);
                     player.openInventory(inventory);
                 }
             }

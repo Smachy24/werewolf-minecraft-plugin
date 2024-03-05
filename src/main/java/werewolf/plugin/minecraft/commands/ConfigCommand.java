@@ -22,9 +22,8 @@ public class ConfigCommand implements CommandExecutor, Listener {
         if (commandSender instanceof Player) {
             if (s.equalsIgnoreCase("config")) {
 
-                RolesConfiguration config = new RolesConfiguration();
                 Bukkit.getPluginManager().registerEvents(new ConfigGui(), plugin);  // Use the correct listener instance
-                config.getItemConfig((Player) commandSender);
+                RolesConfiguration.getItemConfig((Player) commandSender);
 
                 return true;
             }

@@ -2,13 +2,16 @@
   team: Werewolves
   frenchName: Loup-garou
   description: Votre rôle est loup-garou
+  configItem: BROWN_CONCRETE
 
 - name: Villager
   team: Villagers
   frenchName: Simple villageois
   description: Votre rôle est simple villageois
+  configItem: EMERALD
 
 - name: Seer
   team: Villagers
   frenchName: Voyante
   description: Votre rôle est voyante
+  configItem: ENDER_EYE
