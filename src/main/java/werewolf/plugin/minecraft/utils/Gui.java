@@ -34,13 +34,38 @@ public class Gui {
     public static Inventory createInventoryConfigRoles(int size, String inventoryName){
         Inventory inventory = Bukkit.createInventory(null, size, inventoryName);
 
-        for(Role role: RolesConfiguration.getConfigRoles()){
-            ItemStack item = new ItemStack(role.getConfigItem().getMaterial());
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(role.getFrenchName());
-            item.setItemMeta(meta);
-            inventory.addItem(item);
-        }
+        addRoleSection(inventory, RolesConfiguration.getVillagerRoles(), ChatColor.GREEN ,9);
+
+        // Add a line of barrier blocks
+        addBarrierLine(inventory, 27);
+
+        // Add roles for Werewolves
+        addRoleSection(inventory, RolesConfiguration.getWerewolvesRoles(), ChatColor.RED, 36);
+
+        addRoleSection(inventory, RolesConfiguration.getNeutralRoles(), ChatColor.GOLD, 36);
+
         return inventory;
     }
+
+    private static void addBarrierLine(Inventory inventory, int startIndex) {
+        for (int i = 0; i < 9; i++) {
+            ItemStack barrier = new ItemStack(Material.BARRIER);
+            ItemMeta meta = barrier.getItemMeta();
+            meta.setDisplayName(ChatColor.BOLD + "Barrier");
+            barrier.setItemMeta(meta);
+            inventory.setItem(startIndex + i, barrier);
+        }
+    }
+
+    private static void addRoleSection(Inventory inventory, List<Role> roles, ChatColor color, int startIndex) {
+        for (int i = 0; i < Math.min(roles.size(), 18); i++) {
+            Role role = roles.get(i);
+            ItemStack item = new ItemStack(role.getConfigItem().getMaterial());
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(color + role.getFrenchName());
+            item.setItemMeta(meta);
+            inventory.setItem(startIndex + i, item);
+        }
+    }
+
 }

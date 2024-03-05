@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RolesConfiguration implements Listener {
     private static final String ROLES_FILE = "/roles-list.yml";
@@ -27,6 +28,23 @@ public class RolesConfiguration implements Listener {
 
     public static List<Role> getConfigRoles() {
         return configRoles;
+    }
+    public static List<Role> getVillagerRoles() {
+        return filterRolesByTeam("Villagers");
+    }
+
+    public static List<Role> getWerewolvesRoles() {
+        return filterRolesByTeam("Werewolves");
+    }
+
+    public static List<Role> getNeutralRoles() {
+        return filterRolesByTeam("Neutral");
+    }
+
+    private static List<Role> filterRolesByTeam(String team) {
+        return configRoles.stream()
+                .filter(role -> role.getTeam().equalsIgnoreCase(team))
+                .collect(Collectors.toList());
     }
 
     public static void setConfigRoles(List<Role> configRoles) {
@@ -56,8 +74,6 @@ public class RolesConfiguration implements Listener {
             Role instantiatedRole = (Role) roleClass.getDeclaredConstructor(String.class, String.class, String.class, String.class, ConfigItem.class)
                     .newInstance(role.getName(), role.getTeam(), role.getFrenchName(), role.getDescription(), role.getConfigItem());
 
-            Bukkit.broadcastMessage(instantiatedRole.getFrenchName());
-            Bukkit.broadcastMessage(instantiatedRole.getConfigItem().name());
             configRoles.add(instantiatedRole);
         } catch (Exception e) {
             throw new RuntimeException("Error creating role: " + role.getName(), e);
