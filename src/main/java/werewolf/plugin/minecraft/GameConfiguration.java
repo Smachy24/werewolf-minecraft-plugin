@@ -3,10 +3,12 @@ package werewolf.plugin.minecraft;
 import werewolf.plugin.minecraft.roles.Role;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameConfiguration {
 
-    private ArrayList<Role> gameRoles = new ArrayList<>();
+    private static ArrayList<Role> gameRoles = new ArrayList<>();
     private static GameConfiguration instance;
 
     public static GameConfiguration getInstance() {
@@ -20,8 +22,26 @@ public class GameConfiguration {
         return gameRoles;
     }
 
+    public List<Role> getVillagerRoles() {
+        return filterRolesByTeam("Villagers");
+    }
+
+    public List<Role> getWerewolvesRoles() {
+        return filterRolesByTeam("Werewolves");
+    }
+
+    public List<Role> getNeutralRoles() {
+        return filterRolesByTeam("Neutral");
+    }
+
+    private List<Role> filterRolesByTeam(String team) {
+        return gameRoles.stream()
+                .filter(role -> role.getTeam().equalsIgnoreCase(team))
+                .collect(Collectors.toList());
+    }
+
     public void setGameRoles(ArrayList<Role> gameRoles) {
-        this.gameRoles = gameRoles;
+        GameConfiguration.gameRoles = gameRoles;
     }
 
     public boolean containsRole(Role role) {

@@ -53,7 +53,9 @@ public class ConfigGui implements Listener {
             ItemStack clickedItem = event.getCurrentItem();
 
             if (clickedItem != null) {
-                if (clickedItem.getType() == Material.BARRIER) {
+                if (clickedItem.getType() == Material.BARRIER || clickedItem.getType() == Material.RED_CONCRETE
+                    || clickedItem.getType() == Material.GREEN_CONCRETE ||
+                        clickedItem.getType() == Material.ORANGE_CONCRETE) {
                     event.setCancelled(true);
                 }
 
@@ -84,6 +86,7 @@ public class ConfigGui implements Listener {
 
                 GameConfiguration.getInstance().addRole(role);
                 player.sendMessage(ChatColor.GREEN + "Role added: " + role.getFrenchName());
+                addCountTeamsSection(event.getClickedInventory(), 0);
                 event.setCancelled(true);
                 return;
             }
@@ -107,6 +110,7 @@ public class ConfigGui implements Listener {
 
         GameConfiguration.getInstance().removeRole(roleToRemove);
         player.sendMessage(ChatColor.RED + "Role removed: " + roleToRemove.getFrenchName());
+        addCountTeamsSection(event.getClickedInventory(), 0);
         event.setCancelled(true);
     }
 
@@ -144,6 +148,7 @@ public class ConfigGui implements Listener {
     public static Inventory createInventoryConfigRoles(int size, String inventoryName){
         Inventory inventory = Bukkit.createInventory(null, size, inventoryName);
 
+        addCountTeamsSection(inventory, 0);
         addRoleSection(inventory, RolesConfiguration.getVillagerRoles(), ChatColor.GREEN ,9);
         addBarrierLine(inventory, 27);
         addRoleSection(inventory, RolesConfiguration.getWerewolvesRoles(), ChatColor.RED, 36);
@@ -167,5 +172,20 @@ public class ConfigGui implements Listener {
             Role role = roles.get(i);
             inventory.setItem(startIndex + i, ConfigGui.getItemGui(role, color));
         }
+        addCountTeamsSection(inventory, 0);
+    }
+
+    private static void addCountTeamsSection(Inventory inventory, int startIndex) {
+        ItemStack villagersItem = new ItemStack(Material.GREEN_CONCRETE);
+        ItemStack werewolvesItem = new ItemStack(Material.RED_CONCRETE);
+        ItemStack neutralItem = new ItemStack(Material.ORANGE_CONCRETE);
+
+        villagersItem.setAmount(GameConfiguration.getInstance().getVillagerRoles().size());
+        werewolvesItem.setAmount(GameConfiguration.getInstance().getWerewolvesRoles().size());
+        neutralItem.setAmount(GameConfiguration.getInstance().getNeutralRoles().size());
+
+        inventory.setItem(startIndex + 1, villagersItem);
+        inventory.setItem(startIndex + 4, werewolvesItem);
+        inventory.setItem(startIndex + 7, neutralItem);
     }
 }
