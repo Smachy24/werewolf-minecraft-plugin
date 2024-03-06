@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import werewolf.plugin.minecraft.GameConfiguration;
 import werewolf.plugin.minecraft.roles.Role;
@@ -109,14 +110,35 @@ public class ConfigGui implements Listener {
         event.setCancelled(true);
     }
 
-    private List<Role> countRoleOccurrences(ItemStack clickedItem) {
-        List<Role> roleOccurences = new ArrayList<>();
+    private static List<Role> countRoleOccurrences(ItemStack clickedItem) {
+        List<Role> roleOccurrences = new ArrayList<>();
         for (Role role : GameConfiguration.getInstance().getGameRoles()) {
             if (clickedItem.getType() == role.getConfigItem().getMaterial() && GameConfiguration.getInstance().containsRole(role)) {
-                roleOccurences.add(role);
+                roleOccurrences.add(role);
             }
         }
-        return roleOccurences;
+        return roleOccurrences;
+    }
+
+    private static ItemStack getItemGui(Role role, ChatColor color){
+        ItemStack item = new ItemStack(role.getConfigItem().getMaterial());
+        List<Role> roleOccurrences = ConfigGui.countRoleOccurrences(item);
+
+
+        if(roleOccurrences.size()>=1) {
+            item.setAmount(roleOccurrences.size());
+            item.addUnsafeEnchantment(Enchantment.LUCK, 1);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(color + role.getFrenchName());
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.setItemMeta(meta);
+        }
+        else {
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(color + role.getFrenchName());
+            item.setItemMeta(meta);
+        }
+        return item;
     }
 
     public static Inventory createInventoryConfigRoles(int size, String inventoryName){
@@ -143,11 +165,7 @@ public class ConfigGui implements Listener {
     private static void addRoleSection(Inventory inventory, List<Role> roles, ChatColor color, int startIndex) {
         for (int i = 0; i < Math.min(roles.size(), 18); i++) {
             Role role = roles.get(i);
-            ItemStack item = new ItemStack(role.getConfigItem().getMaterial());
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(color + role.getFrenchName());
-            item.setItemMeta(meta);
-            inventory.setItem(startIndex + i, item);
+            inventory.setItem(startIndex + i, ConfigGui.getItemGui(role, color));
         }
     }
 }
