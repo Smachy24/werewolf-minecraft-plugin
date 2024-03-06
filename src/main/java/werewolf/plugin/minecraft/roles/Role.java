@@ -1,7 +1,5 @@
 package werewolf.plugin.minecraft.roles;
 
-import org.bukkit.Material;
-import werewolf.plugin.minecraft.events.ConfigGui;
 import werewolf.plugin.minecraft.utils.ConfigItem;
 
 public class Role {

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;  // Import the Listener interface
 import werewolf.plugin.minecraft.Main;
 import werewolf.plugin.minecraft.utils.RolesConfiguration;
-import werewolf.plugin.minecraft.events.ConfigGui;
+import werewolf.plugin.minecraft.menus.ConfigGui;
 
 public class ConfigCommand implements CommandExecutor, Listener {
 

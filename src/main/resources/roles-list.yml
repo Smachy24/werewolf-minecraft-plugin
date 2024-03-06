@@ -8,7 +8,7 @@
   team: Villagers
   frenchName: Simple villageois
   description: Votre rôle est simple villageois
-  configItem: EMERALD
+  configItem: EMERALD_BLOCK
 
 - name: Seer
   team: Villagers

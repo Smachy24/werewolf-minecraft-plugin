@@ -16,7 +16,7 @@ public class CompositionScoreboard {
     private static ScoreboardManager manager = Bukkit.getScoreboardManager();
     private static Scoreboard board = manager.getNewScoreboard();
     private static Objective obj = board.registerNewObjective("Composition", "dummy");
-    private static ArrayList<Role> gameConfigRoles = new GameConfiguration().getGameRoles();
+    private static ArrayList<Role> gameConfigRoles = GameConfiguration.getInstance().getGameRoles();
 
     static {
         obj.setDisplayName("§5Composition");

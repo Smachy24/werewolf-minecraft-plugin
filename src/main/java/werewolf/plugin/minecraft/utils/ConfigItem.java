@@ -4,7 +4,7 @@ import org.bukkit.Material;
 
 public enum ConfigItem {
     BROWN_CONCRETE(Material.BROWN_CONCRETE),
-    EMERALD(Material.EMERALD),
+    EMERALD_BLOCK(Material.EMERALD_BLOCK),
     ENDER_EYE(Material.ENDER_EYE);
 
     private final Material material;

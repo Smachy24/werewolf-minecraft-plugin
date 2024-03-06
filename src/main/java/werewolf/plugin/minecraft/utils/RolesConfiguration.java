@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class RolesConfiguration implements Listener {
     private static final String ROLES_FILE = "/roles-list.yml";
-    private static List<Role> configRoles = new ArrayList<>(); // Declare the list as static
+    private static List<Role> configRoles = new ArrayList<>();
 
     private static String configItemName = ChatColor.YELLOW + "Config";
     private static Material configItem = Material.COMPASS;
