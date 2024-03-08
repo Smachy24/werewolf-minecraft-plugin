@@ -10,7 +10,6 @@ public enum ConfigItem {
     private final Material material;
 
     ConfigItem(Material material) {
-        // Vérifiez si le matériau est nul, et si c'est le cas, lancez une exception
         if (material == null) {
             throw new IllegalArgumentException("Material cannot be null");
         }
