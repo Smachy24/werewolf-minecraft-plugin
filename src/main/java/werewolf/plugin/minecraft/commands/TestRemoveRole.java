@@ -12,7 +12,6 @@ public class TestRemoveRole implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(commandSender instanceof Player){
             if(s.equalsIgnoreCase("test-remove-role")){
-                Bukkit.getServer().broadcastMessage("Un role a été retiré");
                 updateCompositionScoreboard();
                 return true;
             }

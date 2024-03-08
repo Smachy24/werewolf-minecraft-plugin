@@ -1,10 +1,13 @@
 package werewolf.plugin.minecraft.roles;
 
+import org.bukkit.Material;
+import werewolf.plugin.minecraft.utils.ConfigItem;
+
 public class Werewolf extends Role{
 
     public Werewolf() {
     }
-    public Werewolf(String name, String team, String frenchName, String description) {
-        super(name, team, frenchName, description);
+    public Werewolf(String name, String team, String frenchName, String description, ConfigItem configItem) {
+        super(name, team, frenchName, description, configItem);
     }
 }

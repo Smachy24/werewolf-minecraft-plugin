@@ -1,36 +1,58 @@
 package werewolf.plugin.minecraft;
 
 import werewolf.plugin.minecraft.roles.Role;
-import werewolf.plugin.minecraft.roles.Seer;
-import werewolf.plugin.minecraft.roles.Villager;
-import werewolf.plugin.minecraft.roles.Werewolf;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameConfiguration {
 
-    public GameConfiguration(){
-        createDefaultConfig();
+    private static ArrayList<Role> gameRoles = new ArrayList<>();
+    private static GameConfiguration instance;
+
+    public static GameConfiguration getInstance() {
+        if (instance == null) {
+            instance = new GameConfiguration();
+        }
+        return instance;
     }
-    private ArrayList<Role> gameRoles = new ArrayList<>();
 
     public ArrayList<Role> getGameRoles() {
         return gameRoles;
     }
 
-    public void setGameRoles(ArrayList<Role> gameRoles) {
-        this.gameRoles = gameRoles;
+    public List<Role> getVillagerRoles() {
+        return filterRolesByTeam("Villagers");
     }
 
-    public void createDefaultConfig() {
-        Werewolf werewolf = new Werewolf("Werewolf", "Werewolves", "Loup-garou", "Description d'un loup-garou");
-        Villager villager = new Villager("Villager", "Villagers", "Simple villageois", "Description d'un simple villageois");
-        Seer seer = new Seer("Seer", "Villagers", "Voyante", "Desc voyante");
-        this.gameRoles.add(werewolf);
-        this.gameRoles.add(seer);
-        this.gameRoles.add(villager);
-        this.gameRoles.add(werewolf);
-        this.gameRoles.add(villager);
+    public List<Role> getWerewolvesRoles() {
+        return filterRolesByTeam("Werewolves");
+    }
 
+    public List<Role> getNeutralRoles() {
+        return filterRolesByTeam("Neutral");
+    }
+
+    private List<Role> filterRolesByTeam(String team) {
+        return gameRoles.stream()
+                .filter(role -> role.getTeam().equalsIgnoreCase(team))
+                .collect(Collectors.toList());
+    }
+
+    public void setGameRoles(ArrayList<Role> gameRoles) {
+        GameConfiguration.gameRoles = gameRoles;
+    }
+
+    public boolean containsRole(Role role) {
+        return gameRoles.contains(role);
+    }
+
+    public void addRole(Role role) {
+        gameRoles.add(role);
+    }
+
+    public void removeRole(Role role) {
+        gameRoles.remove(role);
     }
 }

@@ -16,7 +16,7 @@ public class CompositionScoreboard {
     private static ScoreboardManager manager = Bukkit.getScoreboardManager();
     private static Scoreboard board = manager.getNewScoreboard();
     private static Objective obj = board.registerNewObjective("Composition", "dummy");
-    private static ArrayList<Role> gameConfigRoles = new GameConfiguration().getGameRoles();
+    private static ArrayList<Role> gameConfigRoles = GameConfiguration.getInstance().getGameRoles();
 
     static {
         obj.setDisplayName("§5Composition");
@@ -52,8 +52,6 @@ public class CompositionScoreboard {
             int roleCount = Collections.frequency(gameConfigRoles, role);
             ChatColor roleColor = getRoleColor(role);
 
-            Bukkit.getServer().broadcastMessage(roleColor + roleName + ": " + roleCount);
-
             Team composition = obj.getScoreboard().getTeam(roleName);
             if (composition == null) {
                 composition = obj.getScoreboard().registerNewTeam(roleName);
@@ -73,7 +71,6 @@ public class CompositionScoreboard {
             return;
         }
 
-        orderRoles();
         Role firstRole = gameConfigRoles.remove(0); // Retire le premier rôle de la liste
         String roleName = firstRole.getFrenchName();
         int roleCount = Collections.frequency(gameConfigRoles, firstRole);
