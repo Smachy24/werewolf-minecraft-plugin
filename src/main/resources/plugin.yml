@@ -1,0 +1,30 @@
+name: werewolf-plugin-minecraft
+version: '${project.version}'
+main: werewolf.plugin.minecraft.Main
+api-version: '1.20'
+commands:
+  start:
+    description: Start the game
+    usage: /start
+    aliases: s
+    permission: admin.werewolf
+    permission-message: You do not have permission.
+
+  test-remove-role:
+    description: Test removing one role of scoreboard
+    usage: /test-remove-role
+    aliases: s
+    permission: admin.werewolf
+    permission-message: You do not have permission.
+
+  config:
+    description: Config the game
+    usage: /config
+    aliases: s
+    permission: admin.werewolf
+    permission-message: You do not have permission.
+
+  role:
+    description: Get player role
+    usage: /role
+    aliases: s
