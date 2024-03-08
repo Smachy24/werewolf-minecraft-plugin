@@ -11,13 +11,14 @@ import werewolf.plugin.minecraft.GameConfiguration;
 import werewolf.plugin.minecraft.scoreboards.CompositionScoreboard;
 
 public class StartCommand implements CommandExecutor {
+    public static Game game;
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if(commandSender instanceof Player){
             if(s.equalsIgnoreCase("start")) {
                 Bukkit.getServer().broadcastMessage("La partie se lance");
                 loadCompositionScoreboard();
-                Game game = new Game(GameConfiguration.getInstance().getGameRoles());
+                game = new Game(GameConfiguration.getInstance().getGameRoles());
                 game.playGame();
                 return true;
             }
@@ -29,5 +30,9 @@ public class StartCommand implements CommandExecutor {
         for(Player player: Bukkit.getOnlinePlayers()){
             CompositionScoreboard.setScoreBoard(player);
         }
+    }
+
+    public static Game getCurrentGame() {
+        return StartCommand.game;
     }
 }

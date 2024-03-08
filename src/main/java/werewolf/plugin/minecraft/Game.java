@@ -16,6 +16,15 @@ public class Game {
         this.gamePlayers = new ArrayList<>();
     }
 
+    public GamePlayer getGamePlayerByPlayer(Player player) {
+        for (GamePlayer gamePlayer : gamePlayers) {
+            if (gamePlayer.getPlayer().equals(player)) {
+                return gamePlayer;
+            }
+        }
+        return null;
+    }
+
     public void playGame() {
         startGame();
     }

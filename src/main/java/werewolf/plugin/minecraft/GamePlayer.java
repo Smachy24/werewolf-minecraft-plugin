@@ -7,7 +7,7 @@ import werewolf.plugin.minecraft.roles.Role;
 
 public class GamePlayer {
 
-    ChatColor colorMessage = ChatColor.BLUE;
+    private final ChatColor colorMessage = ChatColor.BLUE;
 
     private Role role;
 
