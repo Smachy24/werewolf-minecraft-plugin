@@ -1,5 +1,6 @@
 package werewolf.plugin.minecraft.roles;
 
+import org.bukkit.ChatColor;
 import werewolf.plugin.minecraft.utils.ConfigItem;
 
 public class Role {
@@ -9,6 +10,7 @@ public class Role {
 
     private String description;
     private ConfigItem configItem;
+    private ChatColor color;
 
     public Role() {
     }
@@ -51,6 +53,14 @@ public class Role {
 
     public void setConfigItem(ConfigItem configItem) {
         this.configItem = configItem;
+    }
+
+    public ChatColor getColor() {
+        return color;
+    }
+
+    public void setColor(ChatColor color) {
+        this.color = color;
     }
 
 }
