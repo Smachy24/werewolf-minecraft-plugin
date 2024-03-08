@@ -14,11 +14,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import werewolf.plugin.minecraft.GameConfiguration;
 import werewolf.plugin.minecraft.roles.Role;
-import werewolf.plugin.minecraft.utils.Gui;
 import werewolf.plugin.minecraft.utils.RolesConfiguration;
 
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
 package werewolf.plugin.minecraft;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import werewolf.plugin.minecraft.roles.Role;
 
@@ -23,6 +24,25 @@ public class Game {
             }
         }
         return null;
+    }
+
+    public GamePlayer getGamePlayerByPlayerName(String playerName) {
+        for (GamePlayer gamePlayer : gamePlayers) {
+            if (gamePlayer.getPlayer().getName().equals(playerName)) {
+                return gamePlayer;
+            }
+        }
+        return null;
+    }
+
+    public List<GamePlayer> getOtherAliveGamePlayer(GamePlayer currentPlayer) {
+        List<GamePlayer> tempPlayers = new ArrayList<>(gamePlayers);
+        for(GamePlayer gamePlayer: gamePlayers) {
+            if(gamePlayer == currentPlayer || gamePlayer.getPlayer().getGameMode() != GameMode.SURVIVAL) {
+                tempPlayers.remove(gamePlayer);
+            }
+        }
+        return tempPlayers;
     }
 
     public void playGame() {
