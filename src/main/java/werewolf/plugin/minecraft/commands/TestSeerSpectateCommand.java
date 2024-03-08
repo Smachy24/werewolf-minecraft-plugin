@@ -20,7 +20,7 @@ public class TestSeerSpectateCommand implements CommandExecutor {
                 GamePlayer gamePlayer = StartCommand.game.getGamePlayerByPlayer(player);
                 if(gamePlayer.getRole().getName().equalsIgnoreCase("seer")) {
                     List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(gamePlayer);
-                    Inventory inventory= SeerGui.createInventoryGamePlayersHead(otherAliveGamePlayer);
+                    Inventory inventory= SeerGui.createInventorySeer(otherAliveGamePlayer);
                     player.openInventory(inventory);
                     return true;
                 }

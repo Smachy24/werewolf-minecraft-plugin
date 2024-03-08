@@ -21,7 +21,7 @@ import java.util.List;
 
 public class SeerGui implements Listener {
 
-    public static Inventory createInventoryGamePlayersHead(List<GamePlayer> gamePlayerList){
+    public static Inventory createInventorySeer(List<GamePlayer> gamePlayerList){
         Inventory inventory = Bukkit.createInventory(null, 18, "Voir le rôle de");
 
         for(GamePlayer gamePlayer: gamePlayerList){

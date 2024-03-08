@@ -17,6 +17,22 @@ public class Game {
         this.gamePlayers = new ArrayList<>();
     }
 
+    public List<Role> getGameRoles() {
+        return gameRoles;
+    }
+
+    public void setGameRoles(List<Role> gameRoles) {
+        this.gameRoles = gameRoles;
+    }
+
+    public List<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public void setGamePlayers(List<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
+    }
+
     public GamePlayer getGamePlayerByPlayer(Player player) {
         for (GamePlayer gamePlayer : gamePlayers) {
             if (gamePlayer.getPlayer().equals(player)) {
@@ -25,6 +41,16 @@ public class Game {
         }
         return null;
     }
+    public List<GamePlayer> getGamePlayersByRoleName(String roleName) {
+        List<GamePlayer> tempPlayers = new ArrayList<>();
+        for (GamePlayer gamePlayer : gamePlayers) {
+            if (gamePlayer.getRole().getName().equalsIgnoreCase(roleName)) {
+                tempPlayers.add(gamePlayer);
+            }
+        }
+        return tempPlayers;
+    }
+
 
     public GamePlayer getGamePlayerByPlayerName(String playerName) {
         for (GamePlayer gamePlayer : gamePlayers) {
@@ -68,5 +94,6 @@ public class Game {
         gamePlayers.add(gamePlayer);
         gamePlayer.showRole();
     }
+
 
 }
