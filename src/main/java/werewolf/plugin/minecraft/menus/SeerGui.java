@@ -63,6 +63,7 @@ public class SeerGui implements Listener {
                     player.sendMessage(ChatColor.BLUE + "Le rôle de " + clickedPlayerName + " est : " + clickedGamePlayerRole.getColor() + clickedGamePlayerRole.getFrenchName());
                     isChoiceValidated = true;
                     player.closeInventory();
+                    SeerPhase.setPhaseTerminated(true);
                     SeerPhase.stopPhaseEngine();
                     event.setCancelled(true);
                 } else {

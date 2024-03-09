@@ -21,6 +21,16 @@ public class SeerPhase extends Phase{
     private static List<GamePlayer> players;
     private BukkitRunnable phaseRunnable;
 
+    private static boolean phaseTerminated;
+
+    public static boolean isPhaseTerminated() {
+        return phaseTerminated;
+    }
+
+    public static void setPhaseTerminated(boolean phaseTerminated) {
+        SeerPhase.phaseTerminated = phaseTerminated;
+    }
+
     public SeerPhase(){
         this.setProperties();
     }
@@ -61,6 +71,7 @@ public class SeerPhase extends Phase{
 
     @Override
     public void phaseEngine() {
+        phaseTerminated = true;
         this.players = StartCommand.getCurrentGame().getGamePlayersByRoleName("Seer");
         Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
                 ChatColor.BLUE + "C'est à vous !");
@@ -93,13 +104,10 @@ public class SeerPhase extends Phase{
     }
 
     public static void endPhase() {
-
-        for (GamePlayer gamePlayer : players) {
-            gamePlayer.getPlayer().closeInventory();
-        }
-
-        Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
-                ChatColor.BLUE + "Au dodo !");
-
+         if(phaseTerminated) {
+             Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
+                     ChatColor.BLUE + "Au dodo !");
+         }
+         phaseTerminated = false;
     }
 }
