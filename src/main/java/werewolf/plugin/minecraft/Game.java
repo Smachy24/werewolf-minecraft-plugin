@@ -61,6 +61,16 @@ public class Game {
         return null;
     }
 
+    public List<GamePlayer> getAliveGamePlayer() {
+        List<GamePlayer> tempPlayers = new ArrayList<>(gamePlayers);
+        for(GamePlayer gamePlayer: gamePlayers) {
+            if(gamePlayer.getPlayer().getGameMode() != GameMode.SURVIVAL) {
+                tempPlayers.remove(gamePlayer);
+            }
+        }
+        return tempPlayers;
+    }
+
     public List<GamePlayer> getOtherAliveGamePlayer(GamePlayer currentPlayer) {
         List<GamePlayer> tempPlayers = new ArrayList<>(gamePlayers);
         for(GamePlayer gamePlayer: gamePlayers) {

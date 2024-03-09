@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class SeerPhase extends Phase{
+
     private int duration;
     private Inventory inventory;
     private List<GamePlayer> players;
@@ -20,12 +21,19 @@ public class SeerPhase extends Phase{
 
     public SeerPhase(){
         this.setProperties();
-        this.phaseEngine();
     }
 
     @Override
     public String getPhaseName() {
         return "seer";
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     @Override
