@@ -28,8 +28,4 @@ public class ElectionPhase extends Phase {
 
     }
 
-    @Override
-    public void endPhase() {
-
-    }
 }

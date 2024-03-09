@@ -1,5 +1,6 @@
 package werewolf.plugin.minecraft.phases.roles;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -7,6 +8,7 @@ import werewolf.plugin.minecraft.GamePlayer;
 import werewolf.plugin.minecraft.Main;
 import werewolf.plugin.minecraft.commands.StartCommand;
 import werewolf.plugin.minecraft.menus.SeerGui;
+import werewolf.plugin.minecraft.phases.NightPhase;
 import werewolf.plugin.minecraft.utils.Title;
 
 import java.util.List;
@@ -16,7 +18,7 @@ public class SeerPhase extends Phase{
 
     private int duration;
     private Inventory inventory;
-    private List<GamePlayer> players;
+    private static List<GamePlayer> players;
     private BukkitRunnable phaseRunnable;
 
     public SeerPhase(){
@@ -34,6 +36,15 @@ public class SeerPhase extends Phase{
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public void showInventory(){
+        for(GamePlayer gamePlayer: players) {
+            List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(gamePlayer);
+            inventory = SeerGui.createInventorySeer(otherAliveGamePlayer);
+            gamePlayer.getPlayer().openInventory(inventory);
+
+        }
     }
 
     @Override
@@ -56,11 +67,7 @@ public class SeerPhase extends Phase{
         new BukkitRunnable() {
             @Override
             public void run() {
-                for(GamePlayer gamePlayer: players) {
-                    List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(gamePlayer);
-                    inventory = SeerGui.createInventorySeer(otherAliveGamePlayer);
-                    gamePlayer.getPlayer().openInventory(inventory);
-                }
+                showInventory();
             }
         }.runTaskLater(Main.getInstance(), 100L);
 
@@ -74,13 +81,25 @@ public class SeerPhase extends Phase{
         this.phaseRunnable.runTaskLater(Main.getInstance(), duration*20L);
     }
 
-    @Override
-    public void endPhase() {
-        for(GamePlayer gamePlayer: this.players) {
-            gamePlayer.getPlayer().closeInventory();
+
+    public static void stopPhaseEngine() {
+        if (NightPhase.task != null && !NightPhase.task.isCancelled()) {
+            NightPhase.task.cancel();
         }
-        Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
-                ChatColor.BLUE + "Au dodo !");
+        for(GamePlayer gamePlayer: StartCommand.getCurrentGame().getAliveGamePlayer()) {
+            gamePlayer.getPlayer().setLevel(0);
+        }
+        endPhase();
     }
 
+    public static void endPhase() {
+
+        for (GamePlayer gamePlayer : players) {
+            gamePlayer.getPlayer().closeInventory();
+        }
+
+        Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
+                ChatColor.BLUE + "Au dodo !");
+
+    }
 }

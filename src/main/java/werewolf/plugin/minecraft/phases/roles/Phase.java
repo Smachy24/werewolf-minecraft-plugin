@@ -31,5 +31,4 @@ public abstract class Phase {
 
     public abstract void phaseEngine();
 
-    public abstract void endPhase();
 }
