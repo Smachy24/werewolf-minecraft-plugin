@@ -27,4 +27,9 @@ public class ElectionPhase extends Phase {
     public void phaseEngine() {
 
     }
+
+    @Override
+    public void endPhase() {
+
+    }
 }

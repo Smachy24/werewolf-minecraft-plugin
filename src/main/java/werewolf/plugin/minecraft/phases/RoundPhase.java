@@ -15,7 +15,7 @@ public class RoundPhase {
 
     public RoundPhase(int round) {
         this.currentRound = round;
-        this.phases.add(new SeerPhase());
+        this.phases.add(new NightPhase());
     }
 
 
