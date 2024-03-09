@@ -27,13 +27,31 @@ import java.util.Map;
 
 public class SeerGui implements Listener {
 
-    private static Map<Inventory, String> inventoryMap = new HashMap<>();
 
-    private static boolean isChoiceValidated = false;
+    private SeerPhase seerPhase;
+    private GamePlayer gamePlayer;
+    private boolean isChoiceValidated = false;
+    private Map<Inventory, String> inventoryMap = new HashMap<>();
 
-    public static Inventory createInventorySeer(List<GamePlayer> gamePlayerList){
+    public SeerGui(SeerPhase seerPhase, GamePlayer gamePlayer) {
+        this.seerPhase = seerPhase;
+        this.gamePlayer = gamePlayer;
+    }
+
+    public boolean isChoiceValidated() {
+        return isChoiceValidated;
+    }
+
+    public void setChoiceValidated(boolean choiceValidated) {
+        isChoiceValidated = choiceValidated;
+    }
+
+
+    public Inventory createInventorySeer(List<GamePlayer> gamePlayerList){
+        /*
+        * Create inventory
+        */
         Inventory inventory = Bukkit.createInventory(null, 18, "Voir le rôle de");
-        inventoryMap.put(inventory, "seerInventory");
 
         for(GamePlayer gamePlayer: gamePlayerList){
             if(gamePlayer.getPlayer().getGameMode()== GameMode.SURVIVAL){
@@ -45,13 +63,13 @@ public class SeerGui implements Listener {
                 inventory.addItem(head);
             }
         }
+        this.inventoryMap.put(inventory, "seerInventory");
         return inventory;
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if(event.getClickedInventory() != null && event.getClickedInventory().equals(event.getView().getTopInventory())) {
-            Player player = (Player) event.getWhoClicked();
             InventoryAction action = event.getAction();
             ItemStack clickedItem = event.getCurrentItem();
 
@@ -60,12 +78,11 @@ public class SeerGui implements Listener {
                     String clickedPlayerName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
                     GamePlayer clickedGamePlayer = StartCommand.getCurrentGame().getGamePlayerByPlayerName(clickedPlayerName);
                     Role clickedGamePlayerRole = clickedGamePlayer.getRole();
-                    player.sendMessage(ChatColor.BLUE + "Le rôle de " + clickedPlayerName + " est : " + clickedGamePlayerRole.getColor() + clickedGamePlayerRole.getFrenchName());
-                    isChoiceValidated = true;
-                    player.closeInventory();
-                    SeerPhase.setPhaseTerminated(true);
-                    SeerPhase.stopPhaseEngine();
+                    this.isChoiceValidated = true;
+                    this.gamePlayer.getPlayer().sendMessage(ChatColor.BLUE + "Le rôle de " + clickedPlayerName + " est : " + clickedGamePlayerRole.getColor() + clickedGamePlayerRole.getFrenchName());
+                    this.gamePlayer.getPlayer().closeInventory();
                     event.setCancelled(true);
+                    this.seerPhase.checkIfPhaseTerminated();
                 } else {
                     event.setCancelled(true);
                 }
@@ -76,14 +93,15 @@ public class SeerGui implements Listener {
     @EventHandler
     public void onInventoryClosed(InventoryCloseEvent e) {
         Inventory closedInventory = e.getInventory();
-
-        if (!isChoiceValidated && inventoryMap.containsKey(closedInventory) && inventoryMap.get(closedInventory).equals("seerInventory")) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    e.getPlayer().openInventory(closedInventory);
-                }
-            }.runTaskLater(Main.getInstance(), 1L);
+        if(inventoryMap.containsKey(closedInventory) && inventoryMap.get(closedInventory).equals("seerInventory")) {
+            if (!this.isChoiceValidated) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        gamePlayer.getPlayer().openInventory(closedInventory);
+                    }
+                }.runTaskLater(Main.getInstance(), 1L);
+            }
         }
     }
 }

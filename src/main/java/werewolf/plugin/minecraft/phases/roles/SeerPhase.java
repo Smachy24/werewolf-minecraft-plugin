@@ -2,6 +2,7 @@ package werewolf.plugin.minecraft.phases.roles;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import werewolf.plugin.minecraft.GamePlayer;
@@ -11,28 +12,48 @@ import werewolf.plugin.minecraft.menus.SeerGui;
 import werewolf.plugin.minecraft.phases.NightPhase;
 import werewolf.plugin.minecraft.utils.Title;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class SeerPhase extends Phase{
 
     private int duration;
-    private Inventory inventory;
-    private static List<GamePlayer> players;
-    private BukkitRunnable phaseRunnable;
+    private Map<GamePlayer, SeerGui> gameSeers = new HashMap<>(); // All seers in current game
 
-    private static boolean phaseTerminated;
-
-    public static boolean isPhaseTerminated() {
-        return phaseTerminated;
-    }
-
-    public static void setPhaseTerminated(boolean phaseTerminated) {
-        SeerPhase.phaseTerminated = phaseTerminated;
-    }
+    private boolean phaseTerminated;
 
     public SeerPhase(){
         this.setProperties();
+    }
+
+    public boolean isPhaseTerminated() {
+        return phaseTerminated;
+    }
+
+    public void setPhaseTerminated(boolean phaseTerminated) {
+        this.phaseTerminated = phaseTerminated;
+    }
+
+    public void checkIfPhaseTerminated() {
+        boolean t = false;
+        for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()) {
+            Player player = seer.getKey().getPlayer();
+            player.sendMessage(player.getName() + " : " + seer.getValue().isChoiceValidated());
+            if(seer.getValue().isChoiceValidated()) {
+                player.sendMessage("BB");
+                t = true;
+            }
+            else {
+                player.sendMessage("CC");
+                return;
+            }
+        }
+        if(t) {
+            Bukkit.broadcastMessage("DD");
+            this.stopPhaseEngine();
+        }
     }
 
     @Override
@@ -49,10 +70,10 @@ public class SeerPhase extends Phase{
     }
 
     public void showInventory(){
-        for(GamePlayer gamePlayer: players) {
-            List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(gamePlayer);
-            inventory = SeerGui.createInventorySeer(otherAliveGamePlayer);
-            gamePlayer.getPlayer().openInventory(inventory);
+        for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()) {
+            List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(seer.getKey());
+            Inventory inventory = seer.getValue().createInventorySeer(otherAliveGamePlayer);
+            seer.getKey().getPlayer().openInventory(inventory);
 
         }
     }
@@ -71,8 +92,16 @@ public class SeerPhase extends Phase{
 
     @Override
     public void phaseEngine() {
+
         phaseTerminated = true;
-        this.players = StartCommand.getCurrentGame().getGamePlayersByRoleName("Seer");
+        // Get all seer GamePlayer and set to HashMap
+        List<GamePlayer> players = StartCommand.getCurrentGame().getGamePlayersByRoleName("Seer");
+        for(GamePlayer player: players) {
+            SeerGui seerGui = new SeerGui(this, player);
+            Bukkit.getPluginManager().registerEvents(seerGui, Main.getInstance());
+            gameSeers.put(player, seerGui);
+        }
+
         Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
                 ChatColor.BLUE + "C'est à vous !");
         new BukkitRunnable() {
@@ -82,18 +111,17 @@ public class SeerPhase extends Phase{
             }
         }.runTaskLater(Main.getInstance(), 100L);
 
-        this.phaseRunnable = new BukkitRunnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 endPhase();
                 this.cancel();
             }
-        };
-        this.phaseRunnable.runTaskLater(Main.getInstance(), duration*20L);
+        }.runTaskLater(Main.getInstance(), duration*20L);
     }
 
 
-    public static void stopPhaseEngine() {
+    public void stopPhaseEngine() {
         if (NightPhase.task != null && !NightPhase.task.isCancelled()) {
             NightPhase.task.cancel();
         }
@@ -103,10 +131,14 @@ public class SeerPhase extends Phase{
         endPhase();
     }
 
-    public static void endPhase() {
+    public void endPhase() {
          if(phaseTerminated) {
-             Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
-                     ChatColor.BLUE + "Au dodo !");
+             for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()){
+                 Title.sendTitleToEveryone(ChatColor.GREEN + seer.getKey().getRole().getFrenchName(),
+                 ChatColor.BLUE + "Au dodo !");
+                 break;
+             }
+
          }
          phaseTerminated = false;
     }

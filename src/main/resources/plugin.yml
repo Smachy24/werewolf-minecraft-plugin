@@ -28,8 +28,3 @@ commands:
     description: Get player role
     usage: /role
     aliases: s
-
-  spectate:
-    description: Spectate player role
-    usage: /spectate
-    aliases: s
