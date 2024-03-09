@@ -1,17 +1,41 @@
 - name: Werewolf
   team: Werewolves
   frenchName: Loup-garou
-  description: Votre rôle est loup-garou
+  description: | 
+     Votre rôle consiste à tuer tous les villageois, sans être decouvert, .
   configItem: BROWN_CONCRETE
 
 - name: Villager
   team: Villagers
   frenchName: Simple villageois
-  description: Votre rôle est simple villageois
+  description: | 
+     Votre rôle consiste à tuer tous les loups-garous, vous n'avez aucun pouvoir spécial.
   configItem: EMERALD_BLOCK
 
 - name: Seer
   team: Villagers
   frenchName: Voyante
-  description: Votre rôle est voyante
+  description: | 
+     Votre rôle consiste à tuer tous les loups-garous, chaque nuit vous pourrez voir le role d'un des joueurs et donc démasquer les loups-garous et les éliminer.
   configItem: ENDER_EYE
+
+- name: Witch
+  team: Villagers
+  frenchName: Sorcière
+  description: "Votre rôle consiste à tuer tous les loups-garous, vous possedez 2 potions:
+    \n
+    \n-une potion de vie qui une fois dans la partie permet de soigne un joueur mort au cours de la nuit.
+    \n
+    \n-une potion de mort qui une fois dans la partie cert a tue un joueur au cours de la nuit.
+    \n
+    \nVous ne pourrez pas utiliez les 2 potions en même temps donc faites le bon choix"
+  configItem: BREWING_STAND
+
+- name: Cupid
+  team: Villagers
+  frenchName: Cupidon
+  description: "Votre rôle consiste à tuer tous les loups-garous, vous possedez 2 flèches d'amours pour mettre en couple 2 joueurs:\n
+  \n-Vous avez la possibilité de vous mettre en couple avec un autre joueur si vous le souhaitez.\n
+  \n-Si le couple est composé de membre du même camps alors ils doivent gagné avec leur camps sauf si ils veulent gagné en couple.\n
+  \n-Si le couple est composé de membre de camps opposés alors ils doivent gagné en couple."
+  configItem: BOW
