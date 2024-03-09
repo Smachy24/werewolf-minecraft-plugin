@@ -1,6 +1,8 @@
 package werewolf.plugin.minecraft.phases;
 
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
+import werewolf.plugin.minecraft.Main;
 import werewolf.plugin.minecraft.phases.roles.Phase;
 import werewolf.plugin.minecraft.phases.roles.SeerPhase;
 
@@ -15,8 +17,18 @@ public class RoundPhase {
 
     public RoundPhase(int round) {
         this.currentRound = round;
-        this.phases.add(new NightPhase());
+        roundEngine();
     }
 
+    private void roundEngine() {
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                phases.add(new NightPhase());
+            }
+        }.runTaskLater(Main.getInstance(), 5*20L);
+
+    }
 
 }

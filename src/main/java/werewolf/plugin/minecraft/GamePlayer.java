@@ -3,7 +3,9 @@ package werewolf.plugin.minecraft;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import org.bukkit.scheduler.BukkitRunnable;
 import werewolf.plugin.minecraft.roles.Role;
+import werewolf.plugin.minecraft.utils.Title;
 
 public class GamePlayer {
 
@@ -35,10 +37,8 @@ public class GamePlayer {
     }
 
     public void showRole() {
-        this.player.sendMessage(colorMessage + "Vous êtes " + role.getColor() + role.getFrenchName() + "\n" +
-                colorMessage + role.getDescription() );
+        Title.sendTitleToPlayer(this.player, colorMessage + "Vous êtes " + role.getColor() + role.getFrenchName(),
+                "");
+        this.player.sendMessage(colorMessage + role.getDescription());
     }
-
-
-
 }

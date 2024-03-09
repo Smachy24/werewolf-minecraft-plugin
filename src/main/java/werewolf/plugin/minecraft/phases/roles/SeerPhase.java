@@ -1,12 +1,13 @@
 package werewolf.plugin.minecraft.phases.roles;
 
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import werewolf.plugin.minecraft.GamePlayer;
 import werewolf.plugin.minecraft.Main;
 import werewolf.plugin.minecraft.commands.StartCommand;
 import werewolf.plugin.minecraft.menus.SeerGui;
+import werewolf.plugin.minecraft.utils.Title;
 
 import java.util.List;
 import java.util.Properties;
@@ -42,12 +43,19 @@ public class SeerPhase extends Phase{
     @Override
     public void phaseEngine() {
         this.players = StartCommand.getCurrentGame().getGamePlayersByRoleName("Seer");
+        Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
+                ChatColor.BLUE + "C'est à vous !");
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for(GamePlayer gamePlayer: players) {
+                    List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(gamePlayer);
+                    inventory = SeerGui.createInventorySeer(otherAliveGamePlayer);
+                    gamePlayer.getPlayer().openInventory(inventory);
+                }
+            }
+        }.runTaskLater(Main.getInstance(), 100L);
 
-        for(GamePlayer gamePlayer: this.players) {
-            List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(gamePlayer);
-            this.inventory = SeerGui.createInventorySeer(otherAliveGamePlayer);
-            gamePlayer.getPlayer().openInventory(this.inventory);
-        }
         this.phaseRunnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -63,6 +71,8 @@ public class SeerPhase extends Phase{
         for(GamePlayer gamePlayer: this.players) {
             gamePlayer.getPlayer().closeInventory();
         }
+        Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
+                ChatColor.BLUE + "Au dodo !");
     }
 
 }

@@ -93,6 +93,7 @@ public class Game {
         GamePlayer gamePlayer = new GamePlayer(player, role);
         gamePlayers.add(gamePlayer);
         gamePlayer.showRole();
+
     }
 
 
