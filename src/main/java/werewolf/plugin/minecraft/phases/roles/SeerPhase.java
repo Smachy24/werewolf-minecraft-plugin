@@ -28,30 +28,19 @@ public class SeerPhase extends Phase{
         this.setProperties();
     }
 
-    public boolean isPhaseTerminated() {
-        return phaseTerminated;
-    }
-
-    public void setPhaseTerminated(boolean phaseTerminated) {
-        this.phaseTerminated = phaseTerminated;
-    }
-
     public void checkIfPhaseTerminated() {
         boolean t = false;
         for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()) {
             Player player = seer.getKey().getPlayer();
             player.sendMessage(player.getName() + " : " + seer.getValue().isChoiceValidated());
             if(seer.getValue().isChoiceValidated()) {
-                player.sendMessage("BB");
                 t = true;
             }
             else {
-                player.sendMessage("CC");
                 return;
             }
         }
         if(t) {
-            Bukkit.broadcastMessage("DD");
             this.stopPhaseEngine();
         }
     }

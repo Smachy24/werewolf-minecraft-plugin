@@ -69,38 +69,45 @@ public class SeerGui implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if(event.getClickedInventory() != null && event.getClickedInventory().equals(event.getView().getTopInventory())) {
-            InventoryAction action = event.getAction();
-            ItemStack clickedItem = event.getCurrentItem();
+        if (gamePlayer.getPlayer().equals((Player) event.getWhoClicked())) {
+            if(event.getClickedInventory() != null && event.getClickedInventory().equals(event.getView().getTopInventory())) {
+                InventoryAction action = event.getAction();
+                ItemStack clickedItem = event.getCurrentItem();
 
-            if(clickedItem!= null) {
-                if(action == InventoryAction.PICKUP_ALL) {
-                    String clickedPlayerName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
-                    GamePlayer clickedGamePlayer = StartCommand.getCurrentGame().getGamePlayerByPlayerName(clickedPlayerName);
-                    Role clickedGamePlayerRole = clickedGamePlayer.getRole();
-                    this.isChoiceValidated = true;
-                    this.gamePlayer.getPlayer().sendMessage(ChatColor.BLUE + "Le rôle de " + clickedPlayerName + " est : " + clickedGamePlayerRole.getColor() + clickedGamePlayerRole.getFrenchName());
-                    this.gamePlayer.getPlayer().closeInventory();
-                    event.setCancelled(true);
-                    this.seerPhase.checkIfPhaseTerminated();
-                } else {
-                    event.setCancelled(true);
+                if(clickedItem!= null) {
+                    if(action == InventoryAction.PICKUP_ALL) {
+                        Bukkit.broadcastMessage(ChatColor.RED + "" + this.gamePlayer.getPlayer() + " clicked ! TRUE");
+                        String clickedPlayerName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
+                        GamePlayer clickedGamePlayer = StartCommand.getCurrentGame().getGamePlayerByPlayerName(clickedPlayerName);
+                        Role clickedGamePlayerRole = clickedGamePlayer.getRole();
+                        this.isChoiceValidated = true;
+                        this.gamePlayer.getPlayer().sendMessage(ChatColor.BLUE + "Le rôle de " + clickedPlayerName + " est : " + clickedGamePlayerRole.getColor() + clickedGamePlayerRole.getFrenchName());
+                        this.gamePlayer.getPlayer().closeInventory();
+//                        event.setCancelled(true);
+                        this.seerPhase.checkIfPhaseTerminated();
+                    } else {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }
+
     }
 
     @EventHandler
     public void onInventoryClosed(InventoryCloseEvent e) {
-        Inventory closedInventory = e.getInventory();
-        if(inventoryMap.containsKey(closedInventory) && inventoryMap.get(closedInventory).equals("seerInventory")) {
-            if (!this.isChoiceValidated) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        gamePlayer.getPlayer().openInventory(closedInventory);
-                    }
-                }.runTaskLater(Main.getInstance(), 1L);
+        if (gamePlayer.getPlayer().equals((Player) e.getPlayer())) {
+            Bukkit.broadcastMessage(ChatColor.RED + "" + this.gamePlayer.getPlayer() + " closed !");
+            Inventory closedInventory = e.getInventory();
+            if(inventoryMap.containsKey(closedInventory) && inventoryMap.get(closedInventory).equals("seerInventory")) {
+                if (!this.isChoiceValidated) {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            gamePlayer.getPlayer().openInventory(closedInventory);
+                        }
+                    }.runTaskLater(Main.getInstance(), 1L);
+                }
             }
         }
     }
