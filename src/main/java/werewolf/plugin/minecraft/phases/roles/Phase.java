@@ -1,4 +1,6 @@
-package werewolf.plugin.minecraft.phases;
+package werewolf.plugin.minecraft.phases.roles;
+
+import werewolf.plugin.minecraft.phases.ElectionPhase;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +25,10 @@ public abstract class Phase {
         });
         return resultProps;
     }
+    public abstract String getPhaseName();
 
     public abstract void setProperties();
+
+    public abstract void phaseEngine();
+
 }

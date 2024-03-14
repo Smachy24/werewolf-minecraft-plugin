@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import werewolf.plugin.minecraft.Game;
 import werewolf.plugin.minecraft.GameConfiguration;
+import werewolf.plugin.minecraft.phases.RoundPhase;
 import werewolf.plugin.minecraft.scoreboards.CompositionScoreboard;
 
 public class StartCommand implements CommandExecutor {
@@ -19,7 +20,8 @@ public class StartCommand implements CommandExecutor {
                 Bukkit.getServer().broadcastMessage("La partie se lance");
                 loadCompositionScoreboard();
                 game = new Game(GameConfiguration.getInstance().getGameRoles());
-                game.playGame();
+                game.startGame();
+                RoundPhase firstRound = new RoundPhase(1);
                 return true;
             }
         }
