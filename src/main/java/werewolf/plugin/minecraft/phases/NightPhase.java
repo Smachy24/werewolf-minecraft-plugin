@@ -35,13 +35,15 @@ public class NightPhase extends Phase{
     @Override
     public void phaseEngine() {
         SeerPhase seerPhase = new SeerPhase();
-        count = seerPhase.getDuration();
+        this.count = seerPhase.getDuration();
         seerPhase.phaseEngine();
+        // Timer
         task = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), ()-> {
             for(GamePlayer gamePlayer: StartCommand.getCurrentGame().getAliveGamePlayer()) {
                 gamePlayer.getPlayer().setLevel(count);
             }
             if(count == 0) {
+                seerPhase.stopPhaseEngine();
                 task.cancel();
             }
             count --;

@@ -21,6 +21,7 @@ public class RoundPhase {
     }
 
     private void roundEngine() {
+        // Wait until role title is finished
         new BukkitRunnable() {
 
             @Override

@@ -3,6 +3,7 @@ package werewolf.plugin.minecraft.phases.roles;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import werewolf.plugin.minecraft.GamePlayer;
@@ -20,29 +21,10 @@ import java.util.Properties;
 public class SeerPhase extends Phase{
 
     private int duration;
-    private Map<GamePlayer, SeerGui> gameSeers = new HashMap<>(); // All seers in current game
-
-    private boolean phaseTerminated;
+    private Map<GamePlayer, SeerGui> gameSeers; // All seers in current game
 
     public SeerPhase(){
         this.setProperties();
-    }
-
-    public void checkIfPhaseTerminated() {
-        boolean t = false;
-        for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()) {
-            Player player = seer.getKey().getPlayer();
-            player.sendMessage(player.getName() + " : " + seer.getValue().isChoiceValidated());
-            if(seer.getValue().isChoiceValidated()) {
-                t = true;
-            }
-            else {
-                return;
-            }
-        }
-        if(t) {
-            this.stopPhaseEngine();
-        }
     }
 
     @Override
@@ -58,17 +40,13 @@ public class SeerPhase extends Phase{
         this.duration = duration;
     }
 
-    public void showInventory(){
-        for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()) {
-            List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(seer.getKey());
-            Inventory inventory = seer.getValue().createInventorySeer(otherAliveGamePlayer);
-            seer.getKey().getPlayer().openInventory(inventory);
-
-        }
+    public void removeInventory(SeerGui seerGui) {
+        this.gameSeers.remove(seerGui);
     }
 
     @Override
     public void setProperties() {
+        this.gameSeers = new HashMap<>();
         Properties props = createFromProperties(getPhaseName());
         String durationKey = getPhaseName() + ".duration";
 
@@ -79,18 +57,27 @@ public class SeerPhase extends Phase{
         }
     }
 
-    @Override
-    public void phaseEngine() {
+    public void showInventory(){
+        for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()) {
+            List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(seer.getKey());
+            Player player = seer.getKey().getPlayer();
+            Inventory inventory = seer.getValue().createInventorySeer(otherAliveGamePlayer);
+            player.openInventory(inventory);
+        }
+    }
 
-        phaseTerminated = true;
+    @Override
+    public void phaseEngine() { // start
+
         // Get all seer GamePlayer and set to HashMap
         List<GamePlayer> players = StartCommand.getCurrentGame().getGamePlayersByRoleName("Seer");
         for(GamePlayer player: players) {
             SeerGui seerGui = new SeerGui(this, player);
+//            seerGui.setChoiceValidated(false);
             Bukkit.getPluginManager().registerEvents(seerGui, Main.getInstance());
             gameSeers.put(player, seerGui);
         }
-
+        Bukkit.broadcastMessage(ChatColor.GREEN + "PHASE START");
         Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
                 ChatColor.BLUE + "C'est à vous !");
         new BukkitRunnable() {
@@ -99,36 +86,38 @@ public class SeerPhase extends Phase{
                 showInventory();
             }
         }.runTaskLater(Main.getInstance(), 100L);
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                endPhase();
-                this.cancel();
-            }
-        }.runTaskLater(Main.getInstance(), duration*20L);
     }
 
+    public void checkIfPhaseTerminated() {
+        boolean isPhaseTerminated = gameSeers.values().stream().allMatch(SeerGui::isChoiceValidated);
+        if (isPhaseTerminated) {
+            Bukkit.broadcastMessage(ChatColor.RED + "PHASE END");
+            stopPhaseEngine();
+        }
+    }
 
     public void stopPhaseEngine() {
+        //Cancer count down task
         if (NightPhase.task != null && !NightPhase.task.isCancelled()) {
             NightPhase.task.cancel();
         }
+        // Set xp level to all players to 0
         for(GamePlayer gamePlayer: StartCommand.getCurrentGame().getAliveGamePlayer()) {
             gamePlayer.getPlayer().setLevel(0);
+        }
+        for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()){
+            seer.getValue().setChoiceValidated(true);
+            seer.getKey().getPlayer().closeInventory();
         }
         endPhase();
     }
 
     public void endPhase() {
-         if(phaseTerminated) {
-             for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()){
-                 Title.sendTitleToEveryone(ChatColor.GREEN + seer.getKey().getRole().getFrenchName(),
-                 ChatColor.BLUE + "Au dodo !");
-                 break;
-             }
-
+        // Get current role phase and send message to all players
+         for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()){
+             Title.sendTitleToEveryone(ChatColor.GREEN + seer.getKey().getRole().getFrenchName(),
+             ChatColor.BLUE + "Au dodo !");
+             break;
          }
-         phaseTerminated = false;
     }
 }

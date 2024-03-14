@@ -20,7 +20,7 @@ public class StartCommand implements CommandExecutor {
                 Bukkit.getServer().broadcastMessage("La partie se lance");
                 loadCompositionScoreboard();
                 game = new Game(GameConfiguration.getInstance().getGameRoles());
-                game.playGame();
+                game.startGame();
                 RoundPhase firstRound = new RoundPhase(1);
                 return true;
             }

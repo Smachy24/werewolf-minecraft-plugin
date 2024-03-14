@@ -81,11 +81,7 @@ public class Game {
         return tempPlayers;
     }
 
-    public void playGame() {
-        startGame();
-    }
-
-    private void startGame() {
+    public void startGame() {
         assignRoleToEachPlayer();
     }
 

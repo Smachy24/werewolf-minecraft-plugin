@@ -2,11 +2,14 @@ package werewolf.plugin.minecraft.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import werewolf.plugin.minecraft.GamePlayer;
+import werewolf.plugin.minecraft.commands.StartCommand;
+
 public class Title {
 
     public static void sendTitleToEveryone(String title, String subtitle){
-        for(Player player: Bukkit.getOnlinePlayers()) {
-            player.sendTitle(title, subtitle, 10, 70, 10);
+        for(GamePlayer gamePlayer: StartCommand.getCurrentGame().getAliveGamePlayer()) {
+            gamePlayer.getPlayer().sendTitle(title, subtitle, 10, 70, 10);
         }
     }
 
