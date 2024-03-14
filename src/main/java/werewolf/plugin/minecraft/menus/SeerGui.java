@@ -28,11 +28,10 @@ import java.util.*;
 public class SeerGui implements Listener {
 
 
-    private SeerPhase seerPhase;
-    private GamePlayer gamePlayer;
+    private final SeerPhase seerPhase;
+    private final GamePlayer gamePlayer;
     private boolean isChoiceValidated;
     private final UUID inventoryId;
-    private Inventory inventory;
 
     public SeerGui(SeerPhase seerPhase, GamePlayer gamePlayer) {
         this.seerPhase = seerPhase;
@@ -65,19 +64,17 @@ public class SeerGui implements Listener {
                 inventory.addItem(head);
             }
         }
-        this.inventory = inventory;
-        return this.inventory;
+        return inventory;
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (gamePlayer.getPlayer().equals((Player) event.getWhoClicked())) {
-            if(event.getClickedInventory() != null && event.getClickedInventory().equals(event.getView().getTopInventory()) && event.getView().getTitle().equalsIgnoreCase(this.inventoryId.toString())) {
+            if(event.getClickedInventory() != null && event.getView().getTitle().equalsIgnoreCase(this.inventoryId.toString())) {
                 InventoryAction action = event.getAction();
                 ItemStack clickedItem = event.getCurrentItem();
                 if(clickedItem!= null) {
                     if(action == InventoryAction.PICKUP_ALL) {
-                        Bukkit.broadcastMessage(ChatColor.GOLD + gamePlayer.getPlayer().getName() + " : " + this.isChoiceValidated + " / " + this.inventoryId);
                         String clickedPlayerName = ChatColor.stripColor(Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName());
                         GamePlayer clickedGamePlayer = StartCommand.getCurrentGame().getGamePlayerByPlayerName(clickedPlayerName);
                         Role clickedGamePlayerRole = clickedGamePlayer.getRole();
@@ -85,7 +82,6 @@ public class SeerGui implements Listener {
                         this.gamePlayer.getPlayer().sendMessage(ChatColor.BLUE + "Le rôle de " + clickedPlayerName + " est : " + clickedGamePlayerRole.getColor() + clickedGamePlayerRole.getFrenchName());
                         this.gamePlayer.getPlayer().closeInventory();
                         this.seerPhase.checkIfPhaseTerminated();
-                        this.seerPhase.removeInventory(this);
                     } else {
                         event.setCancelled(true);
                     }

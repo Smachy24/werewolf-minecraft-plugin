@@ -3,7 +3,6 @@ package werewolf.plugin.minecraft.phases.roles;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import werewolf.plugin.minecraft.GamePlayer;
@@ -40,10 +39,6 @@ public class SeerPhase extends Phase{
         this.duration = duration;
     }
 
-    public void removeInventory(SeerGui seerGui) {
-        this.gameSeers.remove(seerGui);
-    }
-
     @Override
     public void setProperties() {
         this.gameSeers = new HashMap<>();
@@ -69,15 +64,12 @@ public class SeerPhase extends Phase{
     @Override
     public void phaseEngine() { // start
 
-        // Get all seer GamePlayer and set to HashMap
         List<GamePlayer> players = StartCommand.getCurrentGame().getGamePlayersByRoleName("Seer");
         for(GamePlayer player: players) {
             SeerGui seerGui = new SeerGui(this, player);
-//            seerGui.setChoiceValidated(false);
             Bukkit.getPluginManager().registerEvents(seerGui, Main.getInstance());
             gameSeers.put(player, seerGui);
         }
-        Bukkit.broadcastMessage(ChatColor.GREEN + "PHASE START");
         Title.sendTitleToEveryone(ChatColor.GREEN + players.get(0).getRole().getFrenchName(),
                 ChatColor.BLUE + "C'est à vous !");
         new BukkitRunnable() {
@@ -91,7 +83,6 @@ public class SeerPhase extends Phase{
     public void checkIfPhaseTerminated() {
         boolean isPhaseTerminated = gameSeers.values().stream().allMatch(SeerGui::isChoiceValidated);
         if (isPhaseTerminated) {
-            Bukkit.broadcastMessage(ChatColor.RED + "PHASE END");
             stopPhaseEngine();
         }
     }
@@ -105,6 +96,7 @@ public class SeerPhase extends Phase{
         for(GamePlayer gamePlayer: StartCommand.getCurrentGame().getAliveGamePlayer()) {
             gamePlayer.getPlayer().setLevel(0);
         }
+        // Close Inventory if not choosed
         for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()){
             seer.getValue().setChoiceValidated(true);
             seer.getKey().getPlayer().closeInventory();
