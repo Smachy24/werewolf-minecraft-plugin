@@ -1,4 +1,4 @@
-package werewolf.plugin.minecraft.phases.roles;
+package werewolf.plugin.minecraft.phases;
 
 import werewolf.plugin.minecraft.phases.ElectionPhase;
 
@@ -29,6 +29,7 @@ public abstract class Phase {
 
     public abstract void setProperties();
 
-    public abstract void phaseEngine();
+    public abstract void startPhaseEngine();
 
+    public abstract void stopPhaseEngine();
 }

@@ -28,3 +28,8 @@ commands:
     description: Get player role
     usage: /role
     aliases: s
+
+  lg-chat:
+    description: Werewolf chat
+    usage: /lg-chat
+    aliases: s

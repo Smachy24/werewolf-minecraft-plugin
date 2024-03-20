@@ -5,12 +5,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import werewolf.plugin.minecraft.commands.*;
 import werewolf.plugin.minecraft.menus.ConfigGui;
 import werewolf.plugin.minecraft.menus.SeerGui;
+import werewolf.plugin.minecraft.scoreboards.WerewolvesPlayersScoreboard;
 
 
 public final class Main extends JavaPlugin {
 
     private static Main instance;
+
+    public WerewolvesPlayersScoreboard werewolvesScoreboard;
     private ConfigGui configGui;
+
 
     @Override
     public void onEnable() {
@@ -18,10 +22,13 @@ public final class Main extends JavaPlugin {
         instance = this;
         configGui = new ConfigGui();
 
+        this.werewolvesScoreboard = new WerewolvesPlayersScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+
         getCommand("start").setExecutor(new StartCommand());
         getCommand("role").setExecutor(new ShowRoleCommand());
         getCommand("test-remove-role").setExecutor(new TestRemoveRole());
         getCommand("config").setExecutor(new ConfigCommand(this));
+        getCommand("lg-chat").setExecutor(new WerewolfChatCommand());
         Bukkit.getPluginManager().registerEvents(configGui, this);
     }
 

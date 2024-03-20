@@ -5,8 +5,8 @@ import org.bukkit.scheduler.BukkitTask;
 import werewolf.plugin.minecraft.GamePlayer;
 import werewolf.plugin.minecraft.Main;
 import werewolf.plugin.minecraft.commands.StartCommand;
-import werewolf.plugin.minecraft.phases.roles.Phase;
 import werewolf.plugin.minecraft.phases.roles.SeerPhase;
+import werewolf.plugin.minecraft.phases.roles.WerewolvesPhase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class NightPhase extends Phase{
     private int count;
 
     public NightPhase() {
-        this.phaseEngine();
+        this.startPhaseEngine();
     }
 
 
@@ -33,21 +33,35 @@ public class NightPhase extends Phase{
     }
 
     @Override
-    public void phaseEngine() {
+    public void startPhaseEngine() {
+//        this.seerPhaseEngine();
+        this.werewolvesPhaseEngine();
+    }
+    @Override
+    public void stopPhaseEngine () {
+
+    }
+
+    private void seerPhaseEngine () {
         SeerPhase seerPhase = new SeerPhase();
         this.count = seerPhase.getDuration();
-        seerPhase.phaseEngine();
+        seerPhase.startPhaseEngine();
         // Timer
-        task = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), ()-> {
-            for(GamePlayer gamePlayer: StartCommand.getCurrentGame().getAliveGamePlayer()) {
+        task = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), () -> {
+            for (GamePlayer gamePlayer : StartCommand.getCurrentGame().getAliveGamePlayer()) {
                 gamePlayer.getPlayer().setLevel(count);
             }
-            if(count == 0) {
+            if (count == 0) {
                 seerPhase.stopPhaseEngine();
                 task.cancel();
             }
-            count --;
-            }, 20, 20);
+            count--;
+        }, 20, 20);
+    }
+
+    private void werewolvesPhaseEngine() {
+        WerewolvesPhase werewolvesPhase = new WerewolvesPhase();
+        werewolvesPhase.startPhaseEngine();
     }
 
 }

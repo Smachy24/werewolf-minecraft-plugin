@@ -1,7 +1,5 @@
 package werewolf.plugin.minecraft.phases;
 
-import werewolf.plugin.minecraft.phases.roles.Phase;
-
 import java.util.Properties;
 
 public class ElectionPhase extends Phase {
@@ -24,7 +22,12 @@ public class ElectionPhase extends Phase {
     }
 
     @Override
-    public void phaseEngine() {
+    public void startPhaseEngine() {
+
+    }
+
+    @Override
+    public void stopPhaseEngine() {
 
     }
 

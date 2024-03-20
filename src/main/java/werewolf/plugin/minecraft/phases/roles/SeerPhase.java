@@ -10,6 +10,7 @@ import werewolf.plugin.minecraft.Main;
 import werewolf.plugin.minecraft.commands.StartCommand;
 import werewolf.plugin.minecraft.menus.SeerGui;
 import werewolf.plugin.minecraft.phases.NightPhase;
+import werewolf.plugin.minecraft.phases.Phase;
 import werewolf.plugin.minecraft.utils.Title;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class SeerPhase extends Phase{
+public class SeerPhase extends Phase {
 
     private int duration;
     private Map<GamePlayer, SeerGui> gameSeers; // All seers in current game
@@ -52,17 +53,8 @@ public class SeerPhase extends Phase{
         }
     }
 
-    public void showInventory(){
-        for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()) {
-            List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(seer.getKey());
-            Player player = seer.getKey().getPlayer();
-            Inventory inventory = seer.getValue().createInventorySeer(otherAliveGamePlayer);
-            player.openInventory(inventory);
-        }
-    }
-
     @Override
-    public void phaseEngine() { // start
+    public void startPhaseEngine() { // start
 
         List<GamePlayer> players = StartCommand.getCurrentGame().getGamePlayersByRoleName("Seer");
         for(GamePlayer player: players) {
@@ -80,13 +72,7 @@ public class SeerPhase extends Phase{
         }.runTaskLater(Main.getInstance(), 100L);
     }
 
-    public void checkIfPhaseTerminated() {
-        boolean isPhaseTerminated = gameSeers.values().stream().allMatch(SeerGui::isChoiceValidated);
-        if (isPhaseTerminated) {
-            stopPhaseEngine();
-        }
-    }
-
+    @Override
     public void stopPhaseEngine() {
         //Cancer count down task
         if (NightPhase.task != null && !NightPhase.task.isCancelled()) {
@@ -96,7 +82,7 @@ public class SeerPhase extends Phase{
         for(GamePlayer gamePlayer: StartCommand.getCurrentGame().getAliveGamePlayer()) {
             gamePlayer.getPlayer().setLevel(0);
         }
-        // Close Inventory if not choosed
+        // Close Inventory if not chose
         for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()){
             seer.getValue().setChoiceValidated(true);
             seer.getKey().getPlayer().closeInventory();
@@ -106,10 +92,26 @@ public class SeerPhase extends Phase{
 
     public void endPhase() {
         // Get current role phase and send message to all players
-         for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()){
-             Title.sendTitleToEveryone(ChatColor.GREEN + seer.getKey().getRole().getFrenchName(),
-             ChatColor.BLUE + "Au dodo !");
-             break;
-         }
+        for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()){
+            Title.sendTitleToEveryone(ChatColor.GREEN + seer.getKey().getRole().getFrenchName(),
+                    ChatColor.BLUE + "Au dodo !");
+            break;
+        }
+    }
+
+    public void showInventory(){
+        for(Map.Entry<GamePlayer, SeerGui> seer: gameSeers.entrySet()) {
+            List<GamePlayer> otherAliveGamePlayer = StartCommand.game.getOtherAliveGamePlayer(seer.getKey());
+            Player player = seer.getKey().getPlayer();
+            Inventory inventory = seer.getValue().createInventorySeer(otherAliveGamePlayer);
+            player.openInventory(inventory);
+        }
+    }
+
+    public void checkIfPhaseTerminated() {
+        boolean isPhaseTerminated = gameSeers.values().stream().allMatch(SeerGui::isChoiceValidated);
+        if (isPhaseTerminated) {
+            stopPhaseEngine();
+        }
     }
 }

@@ -51,6 +51,16 @@ public class Game {
         return tempPlayers;
     }
 
+    public List<GamePlayer> getGamePlayersByTeamName(String teamName) {
+        List<GamePlayer> tempPlayers = new ArrayList<>();
+        for (GamePlayer gamePlayer : gamePlayers) {
+            if (gamePlayer.getRole().getTeam().equalsIgnoreCase(teamName)) {
+                tempPlayers.add(gamePlayer);
+            }
+        }
+        return tempPlayers;
+    }
+
 
     public GamePlayer getGamePlayerByPlayerName(String playerName) {
         for (GamePlayer gamePlayer : gamePlayers) {

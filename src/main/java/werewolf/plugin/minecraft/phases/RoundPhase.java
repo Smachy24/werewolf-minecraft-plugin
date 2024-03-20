@@ -1,13 +1,9 @@
 package werewolf.plugin.minecraft.phases;
 
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import werewolf.plugin.minecraft.Main;
-import werewolf.plugin.minecraft.phases.roles.Phase;
-import werewolf.plugin.minecraft.phases.roles.SeerPhase;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class RoundPhase {
