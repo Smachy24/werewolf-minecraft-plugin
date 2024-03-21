@@ -49,7 +49,7 @@ public class WerewolvesPhase extends Phase {
         List<GamePlayer> players = StartCommand.getCurrentGame().getGamePlayersByRoleName("Werewolf");
         Title.sendTitleToEveryone(ChatColor.RED + players.get(0).getRole().getFrenchName(),
                 ChatColor.BLUE + "C'est à vous !");
-//        addColorWerewolves();
+        addColorWerewolves();
     }
 
     @Override
