@@ -1,5 +1,6 @@
 package werewolf.plugin.minecraft.phases;
 
+import jdk.javadoc.internal.tool.Start;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import werewolf.plugin.minecraft.GamePlayer;
@@ -44,6 +45,7 @@ public class NightPhase extends Phase{
 
     private void seerPhaseEngine () {
         SeerPhase seerPhase = new SeerPhase();
+        StartCommand.getCurrentGame().setCurrentPhase(seerPhase);
         this.count = seerPhase.getDuration();
         seerPhase.startPhaseEngine();
         // Timer
@@ -61,6 +63,7 @@ public class NightPhase extends Phase{
 
     private void werewolvesPhaseEngine() {
         WerewolvesPhase werewolvesPhase = new WerewolvesPhase();
+        StartCommand.getCurrentGame().setCurrentPhase(werewolvesPhase);
         werewolvesPhase.startPhaseEngine();
     }
 

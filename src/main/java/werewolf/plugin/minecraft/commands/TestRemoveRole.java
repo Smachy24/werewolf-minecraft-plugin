@@ -5,7 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import werewolf.plugin.minecraft.scoreboards.CompositionScoreboard;
+import werewolf.plugin.minecraft.scoreboards.CompositionObjective;
 
 public class TestRemoveRole implements CommandExecutor {
     @Override
@@ -21,7 +21,7 @@ public class TestRemoveRole implements CommandExecutor {
 
     private void updateCompositionScoreboard(){
         for(Player player: Bukkit.getOnlinePlayers()){
-            CompositionScoreboard.updateScoreBoard(player);
+//            CompositionObjective.updateScoreBoard(player);
         }
     }
 }

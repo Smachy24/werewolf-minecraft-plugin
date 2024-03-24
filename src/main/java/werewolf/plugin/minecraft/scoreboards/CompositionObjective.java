@@ -5,23 +5,30 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 import werewolf.plugin.minecraft.GameConfiguration;
+import werewolf.plugin.minecraft.Main;
 import werewolf.plugin.minecraft.roles.Role;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class CompositionScoreboard {
+public class CompositionObjective {
 
-    private static ScoreboardManager manager = Bukkit.getScoreboardManager();
-    private static Scoreboard board = manager.getNewScoreboard();
-    private static Objective obj = board.registerNewObjective("Composition", "dummy");
-    private static ArrayList<Role> gameConfigRoles = GameConfiguration.getInstance().getGameRoles();
+    private final Scoreboard mainScoreboard;
+    private final Objective compositionObjective;
+    private final ArrayList<Role> gameConfigRoles = GameConfiguration.getInstance().getGameRoles();
 
-    static {
-        obj.setDisplayName("§5Composition");
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+    public CompositionObjective() {
+        this.mainScoreboard = Main.getInstance().getMainScoreboard();
+        this.compositionObjective = this.createObjective();
     }
+
+    private Objective createObjective() {
+        Objective obj = this.mainScoreboard.registerNewObjective("Composition", "dummy", "§5Composition");
+        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        return obj;
+    }
+
 
     private static ChatColor getRoleColor(Role role){
         if(role.getTeam().equalsIgnoreCase("Villagers")){
@@ -37,14 +44,14 @@ public class CompositionScoreboard {
         }
     }
 
-    private static void orderRoles() {
+    private void orderRoles() {
         Comparator<Role> roleComparator = Comparator
                 .comparing(Role::getTeam)
                 .thenComparing(Role::getFrenchName);
         Collections.sort(gameConfigRoles, roleComparator);
     }
 
-    public static void setScoreBoard(Player player) {
+    public void setScoreBoard(Player player) {
         int i = 99;
         orderRoles();
         for (Role role : gameConfigRoles) {
@@ -52,38 +59,38 @@ public class CompositionScoreboard {
             int roleCount = Collections.frequency(gameConfigRoles, role);
             ChatColor roleColor = getRoleColor(role);
 
-            Team composition = obj.getScoreboard().getTeam(roleName);
+            Team composition = this.compositionObjective.getScoreboard().getTeam(roleName);
             if (composition == null) {
-                composition = obj.getScoreboard().registerNewTeam(roleName);
+                composition = this.compositionObjective.getScoreboard().registerNewTeam(roleName);
                 i--;
             }
 
             composition.setColor(roleColor);
             composition.addEntry(roleName);
             composition.setSuffix(ChatColor.BLUE+ " - " +  roleCount);
-            obj.getScore(roleName).setScore(i);
+            this.compositionObjective.getScore(roleName).setScore(i);
         }
-        player.setScoreboard(board);
+        player.setScoreboard(this.mainScoreboard);
     }
 
-    public static void updateScoreBoard(Player player) {
+    public void updateScoreBoard(Player player) {
         if (gameConfigRoles.isEmpty()) {
             return;
         }
 
-        Role firstRole = gameConfigRoles.remove(0); // Retire le premier rôle de la liste
+        Role firstRole = gameConfigRoles.remove(0); // TODO: Remove correct role not first
         String roleName = firstRole.getFrenchName();
         int roleCount = Collections.frequency(gameConfigRoles, firstRole);
 
         ChatColor roleColor = (roleCount > 0) ? getRoleColor(firstRole) : ChatColor.GRAY;
         ChatColor suffixColor = (roleCount > 0) ? ChatColor.BLUE : ChatColor.GRAY;
 
-        Team composition = obj.getScoreboard().getTeam(roleName);
+        Team composition = this.compositionObjective.getScoreboard().getTeam(roleName);
         if (composition == null) {
-            composition = obj.getScoreboard().registerNewTeam(roleName);
+            composition = this.compositionObjective.getScoreboard().registerNewTeam(roleName);
         }
         composition.setColor(roleColor);
         composition.setSuffix(suffixColor + " - " + roleCount);
-        player.setScoreboard(board);
+        player.setScoreboard(this.mainScoreboard);
     }
 }

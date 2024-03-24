@@ -3,6 +3,7 @@ package werewolf.plugin.minecraft;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import werewolf.plugin.minecraft.phases.Phase;
 import werewolf.plugin.minecraft.roles.Role;
 
 import java.util.*;
@@ -12,9 +13,12 @@ public class Game {
     List<Role> gameRoles;
     List<GamePlayer> gamePlayers;
 
+    private Phase currentPhase;
+
     public Game(List<Role> roles) {
         this.gameRoles = roles;
         this.gamePlayers = new ArrayList<>();
+        this.currentPhase = null;
     }
 
     public List<Role> getGameRoles() {
@@ -113,4 +117,11 @@ public class Game {
     }
 
 
+    public Phase getCurrentPhase() {
+        return currentPhase;
+    }
+
+    public void setCurrentPhase(Phase currentPhase) {
+        this.currentPhase = currentPhase;
+    }
 }
